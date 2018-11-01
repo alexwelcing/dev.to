@@ -32,6 +32,7 @@ class User < ApplicationRecord
   has_many    :chat_channels, through: :chat_channel_memberships
   has_many    :push_notification_subscriptions, dependent: :destroy
   has_many    :feedback_messages
+  has_many    :html_variants, dependent: :destroy
   has_many :mentor_relationships_as_mentee,
   class_name: "MentorRelationship", foreign_key: "mentee_id"
   has_many :mentor_relationships_as_mentor,
@@ -58,8 +59,7 @@ class User < ApplicationRecord
             uniqueness: { case_sensitive: false },
             format: { with: /\A[a-zA-Z0-9_]+\Z/ },
             length: { in: 2..30 },
-            exclusion: { in: ReservedWords.all,
-                         message: "%{value} is reserved." }
+            exclusion: { in: ReservedWords.all, message: "username is reserved" }
   validates :twitter_username, uniqueness: { allow_blank: true }
   validates :github_username, uniqueness: { allow_blank: true }
   validates :text_color_hex, format: /\A#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/, allow_blank: true
